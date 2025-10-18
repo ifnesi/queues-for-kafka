@@ -154,7 +154,7 @@ SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
 SLF4J: Defaulting to no-operation (NOP) logger implementation
 SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
 
-✅ Subscribed to topic 'orders-queue' (group='my-share-group')
+✅ Subscribed to topic 'orders-queue' (group='chefs-share-group')
 
 👨🏻‍🍳 Chef-1 listening for new orders...
 ```
@@ -165,7 +165,7 @@ The **producer** simulates a waiter sending orders to the kitchen:
 
 - Press **ENTER** to submit a new order. Each order is a simple string, e.g., `Order #4768`, `Order #8563`, etc.
 - Orders are sent to the Kafka topic `orders-queue`.
-- The **share consumers** (chefs) will receive the orders in a **queue-style delivery**, meaning each order is handled by only one chef at a time.
+- The **share consumers** (`chefs-share-group`) will receive the orders in a **queue-style delivery**, meaning each order is handled by only one chef at a time.
 - When a chef receives an order, they can choose to:
   - **[A]ccept** – the order is processed and acknowledged.
   - **R[e]lease** – the order is returned to the queue to be picked up later. Each order can only be released up to **five times**.

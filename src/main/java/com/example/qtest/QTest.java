@@ -41,7 +41,7 @@ public class QTest {
         // broker address
         props.setProperty("bootstrap.servers", "localhost:9092");
         // group id - same for all consumers that should share messages
-        props.setProperty("group.id", "my-share-group");
+        props.setProperty("group.id", "chefs-share-group");
         props.setProperty("share.acknowledgement.mode", "explicit");
         // deserializers
         props.setProperty("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
