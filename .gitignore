@@ -1,8 +1,9 @@
-.venv
 .vscode/
 .DS_Store
 *.pyc
 __pycache__/
+
+.env
 
 target/
 vol/
@@ -10,4 +11,3 @@ kafka-data/
 notes.txt
 docker*.yml
 
-.env
