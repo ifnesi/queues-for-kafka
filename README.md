@@ -4,7 +4,7 @@
 
 This is a minimal demo of **Queues for Kafka** (KIP-932), showing how Apache Kafka® can be used in a queue-like fashion where messages are delivered to only one consumer within a shared group. The demo simulates a restaurant scenario:
  - waiters (producers) send orders to the kitchen (Kafka topic `orders-queue`), and
- - multiple chefs (consumers in the same share group) pick up and process orders one by one.  
+ - multiple chefs (consumers in the same share group `chefs-share-group`) pick up and process orders one by one.  
 
 The demo is based on the following resources:  
 - [KIP-932: Queues for Kafka](https://cwiki.apache.org/confluence/display/KAFKA/KIP-932%3A+Queues+for+Kafka)  
