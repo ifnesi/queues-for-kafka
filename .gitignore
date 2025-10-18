@@ -1,0 +1,11 @@
+.venv
+.vscode/
+.DS_Store
+*.pyc
+__pycache__/
+
+target/
+vol/
+kafka-data/
+notes.txt
+docker*.yml
