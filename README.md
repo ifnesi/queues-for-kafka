@@ -102,6 +102,8 @@ opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic
 opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
 ```
 
+Note the topic `orders-queue` was created with oen partion only!
+
 Output example:
 ```bash
 share.version was upgraded to 1.
@@ -119,7 +121,7 @@ mvn -B -q exec:java -Dexec.mainClass=com.example.qtest.QProducer
 Output example:
 ```bash
 ╔═══════════════════════════════════════════╗
-║         🍽️  StreamBytes Restaurant         ║
+║         🍽️  StreamBytes Restaurant        ║
 ╠═══════════════════════════════════════════╣
 ║  Waiters send orders to the kitchen via   ║
 ║  Kafka Queues (KIP-932 / Share Groups).   ║
@@ -156,6 +158,22 @@ SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further detail
 
 👨🏻‍🍳 Chef-1 listening for new orders...
 ```
+
+## How it works
+
+The **producer** simulates a waiter sending orders to the kitchen:
+
+- Press **ENTER** to submit a new order. Each order is a simple string, e.g., `Order #4768`, `Order #8563`, etc.
+- Orders are sent to the Kafka topic `orders-queue`.
+- The **share consumers** (chefs) will receive the orders in a **queue-style delivery**, meaning each order is handled by only one chef at a time.
+- When a chef receives an order, they can choose to:
+  - **[A]ccept** – the order is processed and acknowledged.
+  - **R[e]lease** – the order is returned to the queue to be picked up later. Each order can only be released up to **five times**.
+  - **[R]eject** – the order is discarded.
+
+The Kafka topic has **only one partition**, but you can spin up **multiple share consumers** in the same group. The share group ensures **queue-style delivery**, so each message is consumed by **only one consumer at a time** However, message ordering is **not guaranteed**, and messages may be processed out of order if released back to the queue.
+
+This setup lets you see real-time queue behavior in Kafka with multiple consumers sharing work fairly.
 
 ![image](docs/demo.png)
 
