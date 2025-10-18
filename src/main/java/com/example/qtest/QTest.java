@@ -17,7 +17,7 @@ import java.util.Scanner;
  * each message will be given to only one of the consumers.
  */
 public class QTest {
-    private static final String TOPIC = "quickstart-events";
+    private static final String TOPIC = "orders-queue";
 
     private static void printHeader(String chefName) {
         System.out.println("╔═══════════════════════════════════════════╗");

@@ -12,7 +12,7 @@ import java.util.Properties;
 
 public class ClassicConsumer {
 
-    private static final String TOPIC = "quickstart-events";
+    private static final String TOPIC = "orders-queue";
     private static volatile boolean running = true;
 
     public static void main(String[] args) {

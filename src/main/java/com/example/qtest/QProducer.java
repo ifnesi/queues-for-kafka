@@ -16,11 +16,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class QProducer {
 
-    private static final String TOPIC = "quickstart-events";
+    private static final String TOPIC = "orders-queue";
 
     private static void printHeader() {
         System.out.println("╔═══════════════════════════════════════════╗");
-        System.out.println("║         🍽️  StreamBytes Restaurant         ║");
+        System.out.println("║         🍽️  StreamBytes Restaurant        ║");
         System.out.println("╠═══════════════════════════════════════════╣");
         System.out.println("║  Waiters send orders to the kitchen via   ║");
         System.out.println("║  Kafka Queues (KIP-932 / Share Groups).   ║");
