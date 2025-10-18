@@ -9,3 +9,5 @@ vol/
 kafka-data/
 notes.txt
 docker*.yml
+
+.env
