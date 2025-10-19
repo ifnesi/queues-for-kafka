@@ -168,7 +168,7 @@ This setup lets you see real-time queue behavior in Kafka with multiple consumer
 ![image](docs/demo.png)
 
 ## Classic Kafka Consumer vs. Shared Consumers
-To see how Queues for Kafka (KIP-932) differs from traditional consumer groups, try running two instances of the ClassicConsumer:
+To see how Queues for Kafka (KIP-932) differs from traditional consumer groups, try running two instances of the ClassicConsumer (on different terminals):
 ```bash
 java -cp "bin:lib/*" com.example.qtest.ClassicConsumer
 java -cp "bin:lib/*" com.example.qtest.ClassicConsumer
