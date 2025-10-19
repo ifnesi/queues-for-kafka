@@ -180,6 +180,49 @@ Since the demo topic (`orders-queue`) only has one partition, only one consumer 
 
 This comparison clearly shows how KIP-932 introduces true queue semantics on top of Kafka’s strong partitioning model.
 
+## Testing Queues for Kafka via the CLI
+You can also test Queues for Kafka (KIP-932) directly from the command line using the built-in Kafka CLI tools, no Java code required.
+
+First, start a producer that sends orders (one per line, press **[ENTER]** to submit each message):
+```bash
+/opt/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic orders-queue
+```
+
+Then, in three separate terminals, start shared consumers that demonstrate different acknowledgment behaviors. Each consumer belongs to the same share group (`chefs-share-group`), so messages are load-balanced between them:
+```bash
+# Chef that always ACCEPTS messages
+/opt/kafka/bin/kafka-console-share-consumer.sh --bootstrap-server localhost:9092 --topic orders-queue --group chefs-share-group --property print.offset=true --property print.partition=true --property print.timestamp=true
+
+# Chef that always RELEASES messages (sends them back to the queue)
+/opt/kafka/bin/kafka-console-share-consumer.sh --bootstrap-server localhost:9092 --topic orders-queue --group chefs-share-group --release --property print.offset=true --property print.partition=true --property print.timestamp=true
+
+# Chef that always REJECTS messages (discards them)
+/opt/kafka/bin/kafka-console-share-consumer.sh --bootstrap-server localhost:9092 --topic orders-queue --group chefs-share-group --reject --property print.offset=true --property print.partition=true --property print.timestamp=true
+```
+
+This simple setup lets you experiment with shared consumer semantics, observing how acknowledgments (ACCEPT, RELEASE, REJECT) change message flow behavior in real time.
+
+## Inspecting Consumer and Share Groups
+Kafka 4.1.0 introduces dedicated tooling to manage and inspect share groups (as part of the new Queues for Kafka feature). You can use the following commands to explore both classic and shared consumer groups on your cluster.
+```bash
+# List all groups (both classic and share groups)
+ /opt/kafka/bin/kafka-groups.sh --bootstrap-server localhost:9092 --list
+
+# List only the share groups
+ /opt/kafka/bin/kafka-share-groups.sh --bootstrap-server localhost:9092 --list
+
+# Describe the share group "chefs-share-group"
+ /opt/kafka/bin/kafka-share-groups.sh --bootstrap-server localhost:9092 --describe --group chefs-share-group
+
+# Describe the members (active consumers) of "chefs-share-group"
+ /opt/kafka/bin/kafka-share-groups.sh --bootstrap-server localhost:9092 --describe --group chefs-share-group --members
+
+# Describe the current state of the share group "chefs-share-group"
+ /opt/kafka/bin/kafka-share-groups.sh --bootstrap-server localhost:9092 --describe --group chefs-share-group --state
+```
+
+These commands allow you to monitor how share groups are distributed across consumers, verify which instances are active, and inspect the internal state maintained by Kafka for load balancing and message delivery tracking.
+
 ## Bonus Section: Visualise your Kafka Data in VS Code
 To make the demo even more interactive, you can visualise your Kafka topics and messages directly inside VS Code using the excellent Confluent VS Code extension.
 
