@@ -1,13 +1,15 @@
 .vscode/
-.DS_Store
-*.pyc
 __pycache__/
-
-.env
-
 target/
 vol/
 kafka-data/
+bin/
+lib/
+
+.DS_Store
+*.pyc
+.env
+
 notes.txt
 docker*.yml
 

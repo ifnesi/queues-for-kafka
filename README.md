@@ -22,17 +22,14 @@ The demo is based on the following resources:
 
 ## Setup and Configure Apache Kafka 4.1.0
 
-### Compile the project:
+### Copy Dependencies and Compile the project:
 ```bash
-mvn compile
+mvn dependency:copy-dependencies -DoutputDirectory=lib
+javac -cp "lib/*" -d bin src/com/example/qtest/*.java
 ```
 
 Output example:
 ```bash
-WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
-WARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/opt/homebrew/Cellar/maven/3.9.10/libexec/lib/guice-5.1.0-classes.jar)
-WARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner
-WARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release
 [INFO] Scanning for projects...
 [INFO] 
 [INFO] -------------------------< com.example:qtest >--------------------------
@@ -40,22 +37,15 @@ WARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release
 [INFO]   from pom.xml
 [INFO] --------------------------------[ jar ]---------------------------------
 [INFO] 
-[INFO] --- resources:3.3.1:resources (default-resources) @ qtest ---
-[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
-[INFO] skip non existing resourceDirectory /Users/inesi/Documents/_CFLT/Dev/java/queues-for-kafka/src/main/resources
-[INFO] 
-[INFO] --- compiler:3.13.0:compile (default-compile) @ qtest ---
-[INFO] Recompiling the module because of added or removed source files.
-[WARNING] File encoding has not been set, using platform encoding UTF-8, i.e. build is platform dependent!
-[INFO] Compiling 3 source files with javac [debug target 17] to target/classes
-[WARNING] location of system modules is not set in conjunction with -source 17
-  not setting the location of system modules may lead to class files that cannot run on JDK 17
-    --release 17 is recommended instead of -source 17 -target 17 because it sets the location of system modules automatically
+[INFO] --- dependency:3.7.0:copy-dependencies (default-cli) @ qtest ---
+.
+.
+.
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  0.711 s
-[INFO] Finished at: 2025-10-18T20:04:20+01:00
+[INFO] Total time:  3.976 s
+[INFO] Finished at: 2025-10-19T07:59:09+01:00
 [INFO] ------------------------------------------------------------------------
 ```
 
@@ -97,9 +87,9 @@ docker run --rm -p 9092:9092 apache/kafka:4.1.0
 
 #### Inside the container, execute the following to enable share groups and create the topic:
 ```bash
-opt/kafka/bin/kafka-features.sh --bootstrap-server localhost:9092 upgrade --feature share.version=1
-opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders-queue
-opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
+/opt/kafka/bin/kafka-features.sh --bootstrap-server localhost:9092 upgrade --feature share.version=1
+/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders-queue --partitions 1
+/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders-queue
 ```
 
 Note the topic `orders-queue` was created with oen partion only!
@@ -107,15 +97,18 @@ Note the topic `orders-queue` was created with oen partion only!
 Output example:
 ```bash
 share.version was upgraded to 1.
+
 Created topic orders-queue.
-orders-queue
+
+Topic: orders-queue     TopicId: 1HHKxeTuTVOFm0ZaI5BHPw PartitionCount: 1     ReplicationFactor: 1    Configs: min.insync.replicas=1,segment.bytes=1073741824
+      Topic: orders-queue     Partition: 0    Leader: 1       Replicas: 1     Isr: 1  Elr:    LastKnownElr: 
 ```
 
 ## Run the Producer
 
 ### On another terminal, run:
 ```bash
-mvn -B -q exec:java -Dexec.mainClass=com.example.qtest.QProducer
+java -cp "bin:lib/*" com.example.qtest.QProducer
 ```
 
 Output example:
@@ -134,9 +127,9 @@ Output example:
 
 ### Open three separate terminals (one for each chef) and run:
 ```bash
-mvn -B -q exec:java -Dexec.mainClass=com.example.qtest.QTest -Dexec.args="Chef-1"
-mvn -B -q exec:java -Dexec.mainClass=com.example.qtest.QTest -Dexec.args="Chef-2"
-mvn -B -q exec:java -Dexec.mainClass=com.example.qtest.QTest -Dexec.args="Chef-3"
+java -cp "bin:lib/*" com.example.qtest.QTest Chef-1
+java -cp "bin:lib/*" com.example.qtest.QTest Chef-2
+java -cp "bin:lib/*" com.example.qtest.QTest Chef-3
 ```
 
 Each chef will receive orders in a queue-style delivery, and you can choose to Accept (A), Release (E), or Reject (R) each order.
@@ -173,6 +166,11 @@ The Kafka topic has **only one partition**, but you can spin up **multiple share
 This setup lets you see real-time queue behavior in Kafka with multiple consumers sharing work fairly.
 
 ![image](docs/demo.png)
+
+## Bonus Section: Visualise your Kafka Data in VS Code
+To make the demo even more interactive, you can visualise your Kafka topics and messages directly inside VS Code using the excellent Confluent VS Code extension.
+
+![image](docs/cflt-vscode.png)
 
 ## External References
 
