@@ -1,7 +1,6 @@
 ![image](docs/confluent-logo.png)
 
 # Queues for Kafka Demo
-
 This is a minimal demo of **Queues for Kafka** (KIP-932), showing how Apache Kafka® can be used in a queue-like fashion where messages are delivered to only one consumer within a shared group. The demo simulates a restaurant scenario:
  - waiters (producers) send orders to the kitchen (Kafka topic `orders-queue`), and
  - multiple chefs (consumers in the same share group `chefs-share-group`) pick up and process orders one by one.  
@@ -13,7 +12,6 @@ The demo is based on the following resources:
 ---
 
 ## Dependencies
-
 - [Maven](https://maven.apache.org/install.html)  
 - [Java 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)  
 - [Docker](https://docs.docker.com/get-docker/)
@@ -150,7 +148,6 @@ Creating KafkaShareConsumer...
 ```
 
 ## How it works
-
 The **producer** simulates a waiter sending orders to the kitchen:
 
 - Press **ENTER** to submit a new order. Each order is a simple string, e.g., `Order #4768`, `Order #8563`, etc.
@@ -229,7 +226,6 @@ To make the demo even more interactive, you can visualise your Kafka topics and 
 ![image](docs/cflt-vscode.png)
 
 ## External References
-
 Check out [Confluent's Developer portal](https://developer.confluent.io), it has free courses, documents, articles, blogs, podcasts and so many more content to get you up and running with a fully managed Apache Kafka service.
 
 Disclaimer: I work for Confluent :wink:
