@@ -102,9 +102,9 @@ Topic: orders-queue     TopicId: 1HHKxeTuTVOFm0ZaI5BHPw PartitionCount: 1     Re
       Topic: orders-queue     Partition: 0    Leader: 1       Replicas: 1     Isr: 1  Elr:    LastKnownElr: 
 ```
 
-## Run the Producer
+### Run the Producer
 
-### On another terminal, run:
+#### On another terminal, run:
 ```bash
 java -cp "bin:lib/*" com.example.qtest.QProducer
 ```
@@ -121,9 +121,9 @@ Output example:
 🛎️ Press [ENTER] to send a new order ([Ctrl+C] to quit)...
 ```
 
-## Run the Share Consumers (Chefs)
+### Run the Share Consumers (Chefs)
 
-### Open three separate terminals (one for each chef) and run:
+#### Open three separate terminals (one for each chef) and run:
 ```bash
 java -cp "bin:lib/*" com.example.qtest.QTest Chef-1
 java -cp "bin:lib/*" com.example.qtest.QTest Chef-2
@@ -147,7 +147,7 @@ Creating KafkaShareConsumer...
 👨🏻‍🍳 Chef-1 listening for new orders...
 ```
 
-## How it works
+### How it works
 The **producer** simulates a waiter sending orders to the kitchen:
 
 - Press **ENTER** to submit a new order. Each order is a simple string, e.g., `Order #4768`, `Order #8563`, etc.
@@ -164,7 +164,7 @@ This setup lets you see real-time queue behavior in Kafka with multiple consumer
 
 ![image](docs/demo.png)
 
-## Classic Kafka Consumer vs. Shared Consumers
+### Classic Kafka Consumer vs. Shared Consumers
 To see how Queues for Kafka (KIP-932) differs from traditional consumer groups, try running two instances of the ClassicConsumer (on different terminals):
 ```bash
 java -cp "bin:lib/*" com.example.qtest.ClassicConsumer
@@ -199,7 +199,7 @@ Then, in three separate terminals, start shared consumers that demonstrate diffe
 
 This simple setup lets you experiment with shared consumer semantics, observing how acknowledgments (ACCEPT, RELEASE, REJECT) change message flow behavior in real time.
 
-## Inspecting Consumer and Share Groups
+### Inspecting Consumer and Share Groups
 Kafka 4.1.0 introduces dedicated tooling to manage and inspect share groups (as part of the new Queues for Kafka feature). You can use the following commands to explore both classic and shared consumer groups on your cluster.
 ```bash
 # List all groups (both classic and share groups)
