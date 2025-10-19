@@ -167,6 +167,19 @@ This setup lets you see real-time queue behavior in Kafka with multiple consumer
 
 ![image](docs/demo.png)
 
+## Classic Kafka Consumer vs. Shared Consumers
+To see how Queues for Kafka (KIP-932) differs from traditional consumer groups, try running two instances of the ClassicConsumer:
+```bash
+java -cp "bin:lib/*" com.example.qtest.ClassicConsumer
+java -cp "bin:lib/*" com.example.qtest.ClassicConsumer
+```
+
+Unlike shared consumers (KafkaShareConsumer), classic Kafka consumers use consumer groups where each partition in a topic is exclusively assigned to one consumer within the group.
+
+Since the demo topic (`orders-queue`) only has one partition, only one consumer in the classic consumer group will be active, all others will remain idle. This behavior contrasts with share groups, where multiple consumers can process messages from the same partition concurrently while Kafka still ensures that each message is delivered to exactly one active consumer.
+
+This comparison clearly shows how KIP-932 introduces true queue semantics on top of Kafka’s strong partitioning model.
+
 ## Bonus Section: Visualise your Kafka Data in VS Code
 To make the demo even more interactive, you can visualise your Kafka topics and messages directly inside VS Code using the excellent Confluent VS Code extension.
 
