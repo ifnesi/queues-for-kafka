@@ -30,12 +30,12 @@ Output example:
 ```bash
 [INFO] Scanning for projects...
 [INFO] 
-[INFO] -------------------------< com.example:qtest >--------------------------
-[INFO] Building qtest 1.0-SNAPSHOT
+[INFO] -------------------------< com.example:QConsumer >--------------------------
+[INFO] Building QConsumer 1.0-SNAPSHOT
 [INFO]   from pom.xml
 [INFO] --------------------------------[ jar ]---------------------------------
 [INFO] 
-[INFO] --- dependency:3.7.0:copy-dependencies (default-cli) @ qtest ---
+[INFO] --- dependency:3.7.0:copy-dependencies (default-cli) @ QConsumer ---
 .
 .
 .
@@ -78,16 +78,18 @@ What's next:
 
 ### Start Kafka Broker
 
-#### On one terminal, run:
+#### On one terminal, run your container:
 ```bash
-docker run --rm -p 9092:9092 apache/kafka:4.1.1
+docker run --name kafka_qfk --rm -p 9092:9092 apache/kafka:4.1.1
 ```
 
 #### Inside the container, execute the following to enable share groups and create the topic:
 ```bash
+docker exec -it kafka_qfk sh
 /opt/kafka/bin/kafka-features.sh --bootstrap-server localhost:9092 upgrade --feature share.version=1
 /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic orders-queue --partitions 1
 /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders-queue
+exit
 ```
 
 Note the topic `orders-queue` was created with oen partion only!
@@ -106,7 +108,7 @@ Topic: orders-queue     TopicId: 1HHKxeTuTVOFm0ZaI5BHPw PartitionCount: 1     Re
 
 #### On another terminal, run:
 ```bash
-java -cp "bin:lib/*" com.example.qtest.QProducer
+mvn -B -q exec:java -Dexec.mainClass=com.example.qtest.KProducer
 ```
 
 Output example:
@@ -125,9 +127,9 @@ Output example:
 
 #### Open three separate terminals (one for each chef) and run:
 ```bash
-java -cp "bin:lib/*" com.example.qtest.QTest Chef-1
-java -cp "bin:lib/*" com.example.qtest.QTest Chef-2
-java -cp "bin:lib/*" com.example.qtest.QTest Chef-3
+java -cp "bin:lib/*" com.example.qtest.QConsumer Chef-1
+java -cp "bin:lib/*" com.example.qtest.QConsumer Chef-2
+java -cp "bin:lib/*" com.example.qtest.QConsumer Chef-3
 ```
 
 Each chef will receive orders in a queue-style delivery, and you can choose to Accept (A), Release (E), or Reject (R) each order.
@@ -165,10 +167,10 @@ This setup lets you see real-time queue behavior in Kafka with multiple consumer
 ![image](docs/demo.png)
 
 ### Classic Kafka Consumer vs. Shared Consumers
-To see how Queues for Kafka (KIP-932) differs from traditional consumer groups, try running two instances of the ClassicConsumer (on different terminals):
+To see how Queues for Kafka (KIP-932) differs from traditional consumer groups, try running two instances of the KConsumer (on different terminals):
 ```bash
-java -cp "bin:lib/*" com.example.qtest.ClassicConsumer
-java -cp "bin:lib/*" com.example.qtest.ClassicConsumer
+mvn -B -q exec:java -Dexec.mainClass=com.example.qtest.KConsumer
+mvn -B -q exec:java -Dexec.mainClass=com.example.qtest.KConsumer
 ```
 
 Unlike shared consumers (KafkaShareConsumer), classic Kafka consumers use consumer groups where each partition in a topic is exclusively assigned to one consumer within the group.

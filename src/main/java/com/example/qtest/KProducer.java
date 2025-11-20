@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Each message is of the form "Order: <ORDER_ID>".
  * User presses ENTER to send a new message, Ctrl-C to quit.
  */
-public class QProducer {
+public class KProducer {
 
     private static final String TOPIC = "orders-queue";
 

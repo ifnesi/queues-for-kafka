@@ -10,7 +10,7 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
 
-public class ClassicConsumer {
+public class KConsumer {
 
     private static final String TOPIC = "orders-queue";
     private static volatile boolean running = true;

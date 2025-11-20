@@ -16,7 +16,7 @@ import java.util.Scanner;
  * Start TWO instances of this program (two terminals) to observe queue-style delivery:
  * each message will be given to only one of the consumers.
  */
-public class QTest {
+public class QConsumer {
     private static final String TOPIC = "orders-queue";
 
     private static void printHeader(String chefName) {
