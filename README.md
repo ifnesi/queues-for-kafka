@@ -18,7 +18,7 @@ The demo is based on the following resources:
 
 ---
 
-## Setup and Configure Apache Kafka 4.1.0
+## Setup and Configure Apache Kafka 4.1.1
 
 ### Copy Dependencies and Compile the project:
 ```bash
@@ -47,14 +47,14 @@ Output example:
 [INFO] ------------------------------------------------------------------------
 ```
 
-### Pull the Kafka 4.1.0 Docker image:
+### Pull the Kafka 4.1.1 Docker image:
 ```bash
-docker pull apache/kafka:4.1.0
+docker pull apache/kafka:4.1.1
 ```
 
 Output example:
 ```bash
-4.1.0: Pulling from apache/kafka
+4.1.1: Pulling from apache/kafka
 6e174226ea69: Already exists 
 65b71ebe70c7: Pull complete 
 ffd236ccc425: Pull complete 
@@ -67,11 +67,11 @@ f750e0a0984e: Pull complete
 c6c27b7944e0: Pull complete 
 700688e2c13a: Pull complete 
 Digest: sha256:bff074a5d0051dbc0bbbcd25b045bb1fe84833ec0d3c7c965d1797dd289ec88f
-Status: Downloaded newer image for apache/kafka:4.1.0
-docker.io/apache/kafka:4.1.0
+Status: Downloaded newer image for apache/kafka:4.1.1
+docker.io/apache/kafka:4.1.1
 
 What's next:
-    View a summary of image vulnerabilities and recommendations → docker scout quickview apache/kafka:4.1.0
+    View a summary of image vulnerabilities and recommendations → docker scout quickview apache/kafka:4.1.1
 ```
 
 ## Running the Demo
@@ -80,7 +80,7 @@ What's next:
 
 #### On one terminal, run:
 ```bash
-docker run --rm -p 9092:9092 apache/kafka:4.1.0
+docker run --rm -p 9092:9092 apache/kafka:4.1.1
 ```
 
 #### Inside the container, execute the following to enable share groups and create the topic:
@@ -200,7 +200,7 @@ Then, in three separate terminals, start shared consumers that demonstrate diffe
 This simple setup lets you experiment with shared consumer semantics, observing how acknowledgments (ACCEPT, RELEASE, REJECT) change message flow behavior in real time.
 
 ### Inspecting Consumer and Share Groups
-Kafka 4.1.0 introduces dedicated tooling to manage and inspect share groups (as part of the new Queues for Kafka feature). You can use the following commands to explore both classic and shared consumer groups on your cluster.
+Kafka 4.1.1 introduces dedicated tooling to manage and inspect share groups (as part of the new Queues for Kafka feature). You can use the following commands to explore both classic and shared consumer groups on your cluster.
 ```bash
 # List all groups (both classic and share groups)
  /opt/kafka/bin/kafka-groups.sh --bootstrap-server localhost:9092 --list
