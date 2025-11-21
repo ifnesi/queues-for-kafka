@@ -23,6 +23,7 @@ The demo is based on the following resources:
 ### Copy Dependencies and Compile the project:
 ```bash
 mvn dependency:copy-dependencies -DoutputDirectory=lib
+mvn compile
 javac -cp "lib/*" -d bin src/main/java/com/example/qtest/*.java
 ```
 
