@@ -127,9 +127,9 @@ Output example:
 
 #### Open three separate terminals (one for each chef) and run:
 ```bash
-java -cp "bin:lib/*" com.example.qtest.QConsumer Chef-1
-java -cp "bin:lib/*" com.example.qtest.QConsumer Chef-2
-java -cp "bin:lib/*" com.example.qtest.QConsumer Chef-3
+mvn -B -q exec:java -Dexec.mainClass=com.example.qtest.QConsumer -Dexec.args="Chef-1"
+mvn -B -q exec:java -Dexec.mainClass=com.example.qtest.QConsumer -Dexec.args="Chef-2"
+mvn -B -q exec:java -Dexec.mainClass=com.example.qtest.QConsumer -Dexec.args="Chef-3"
 ```
 
 Each chef will receive orders in a queue-style delivery, and you can choose to Accept (A), Release (E), or Reject (R) each order.
@@ -166,16 +166,16 @@ This setup lets you see real-time queue behavior in Kafka with multiple consumer
 
 ![image](docs/demo.png)
 
-### Classic Kafka Consumer vs. Shared Consumers
+### Kafka Consumer vs. Shared Consumers
 To see how Queues for Kafka (KIP-932) differs from traditional consumer groups, try running two instances of the KConsumer (on different terminals):
 ```bash
 mvn -B -q exec:java -Dexec.mainClass=com.example.qtest.KConsumer
 mvn -B -q exec:java -Dexec.mainClass=com.example.qtest.KConsumer
 ```
 
-Unlike shared consumers (KafkaShareConsumer), classic Kafka consumers use consumer groups where each partition in a topic is exclusively assigned to one consumer within the group.
+Unlike shared consumers (KafkaShareConsumer), Kafka consumers use consumer groups where each partition in a topic is exclusively assigned to one consumer within the group.
 
-Since the demo topic (`orders-queue`) only has one partition, only one consumer in the classic consumer group will be active, all others will remain idle. This behavior contrasts with share groups, where multiple consumers can process messages from the same partition concurrently while Kafka still ensures that each message is delivered to exactly one active consumer.
+Since the demo topic (`orders-queue`) only has one partition, only one consumer in the Kafka consumer group will be active, all others will remain idle. This behavior contrasts with share groups, where multiple consumers can process messages from the same partition concurrently while Kafka still ensures that each message is delivered to exactly one active consumer.
 
 This comparison clearly shows how KIP-932 introduces true queue semantics on top of Kafka’s strong partitioning model.
 
@@ -202,9 +202,9 @@ Then, in three separate terminals, start shared consumers that demonstrate diffe
 This simple setup lets you experiment with shared consumer semantics, observing how acknowledgments (ACCEPT, RELEASE, REJECT) change message flow behavior in real time.
 
 ### Inspecting Consumer and Share Groups
-Kafka 4.1.1 introduces dedicated tooling to manage and inspect share groups (as part of the new Queues for Kafka feature). You can use the following commands to explore both classic and shared consumer groups on your cluster.
+Kafka 4.1.1 introduces dedicated tooling to manage and inspect share groups (as part of the new Queues for Kafka feature). You can use the following commands to explore both Kafka and shared consumer groups on your cluster.
 ```bash
-# List all groups (both classic and share groups)
+# List all groups (both Kafka and share groups)
  /opt/kafka/bin/kafka-groups.sh --bootstrap-server localhost:9092 --list
 
 # List only the share groups
