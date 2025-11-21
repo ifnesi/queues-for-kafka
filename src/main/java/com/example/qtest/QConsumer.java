@@ -87,12 +87,12 @@ public class QConsumer {
                         case "E":
                             System.out.printf("↩️ %s released back to queue!%n", r.value());
                             consumer.acknowledge(r, AcknowledgeType.RELEASE);
-                            Thread.sleep(1000);
+                            //Thread.sleep(1000);
                             break;
                         default:
                             System.out.printf("✅ %s accepted and being prepared!%n", r.value());
                             consumer.acknowledge(r, AcknowledgeType.ACCEPT);
-                            Thread.sleep(1000);
+                            //Thread.sleep(1000);
                     }
                     System.out.println();
                     printChef(chefName);
