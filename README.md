@@ -1,7 +1,7 @@
 ![image](docs/confluent-logo.png)
 
 # Queues for Kafka Demo
-This is a minimal demo of **Queues for Kafka** (KIP-932), showing how Apache Kafka® can be used in a queue-like fashion where messages are delivered to only one consumer within a shared group. The demo simulates a restaurant scenario:
+This is a minimal demo of **Queues for Kafka** (KIP-932), showing how Apache Kafka® can be used in a queue-like fashion where messages are delivered to only one consumer within a share group. The demo simulates a restaurant scenario:
  - waiters (producers) send orders to the kitchen (Kafka topic `orders-queue`), and
  - multiple chefs (consumers in the same share group `chefs-share-group`) pick up and process orders one by one.  
 
@@ -93,7 +93,7 @@ docker exec -it kafka_qfk sh
 exit
 ```
 
-Note the topic `orders-queue` was created with oen partion only!
+Note the topic `orders-queue` was created with one partition only!
 
 Output example:
 ```bash
@@ -167,16 +167,16 @@ This setup lets you see real-time queue behavior in Kafka with multiple consumer
 
 ![image](docs/demo.png)
 
-### Kafka Consumer vs. Shared Consumers
+### Consumer Groups vs. Share Groups
 To see how Queues for Kafka (KIP-932) differs from traditional consumer groups, try running two instances of the KConsumer (on different terminals):
 ```bash
 mvn -B -q exec:java -Dexec.mainClass=com.example.qtest.KConsumer
 mvn -B -q exec:java -Dexec.mainClass=com.example.qtest.KConsumer
 ```
 
-Unlike shared consumers (KafkaShareConsumer), Kafka consumers use consumer groups where each partition in a topic is exclusively assigned to one consumer within the group.
+When using consumer groups, each partition in a topic is exclusively assigned to one consumer within the group.
 
-Since the demo topic (`orders-queue`) only has one partition, only one consumer in the Kafka consumer group will be active, all others will remain idle. This behavior contrasts with share groups, where multiple consumers can process messages from the same partition concurrently while Kafka still ensures that each message is delivered to exactly one active consumer.
+Since the demo topic (`orders-queue`) only has one partition, only one consumer in the Kafka consumer group will be receiving messages, all others will remain idle. This behavior contrasts with share groups, where multiple consumers can process messages from the same partition concurrently while Kafka still ensures that each message is delivered to exactly one consumer at a time.
 
 This comparison clearly shows how KIP-932 introduces true queue semantics on top of Kafka’s strong partitioning model.
 
@@ -188,7 +188,7 @@ First, start a producer that sends orders (one per line, press **[ENTER]** to su
 /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic orders-queue
 ```
 
-Then, in three separate terminals, start shared consumers that demonstrate different acknowledgment behaviors. Each consumer belongs to the same share group (`chefs-share-group`), so messages are load-balanced between them:
+Then, in three separate terminals, start share consumers that demonstrate different acknowledgment behaviors. Each consumer belongs to the same share group (`chefs-share-group`), so messages are load-balanced between them:
 ```bash
 # Chef that always ACCEPTS messages
 /opt/kafka/bin/kafka-console-share-consumer.sh --bootstrap-server localhost:9092 --topic orders-queue --group chefs-share-group --property print.offset=true --property print.partition=true --property print.timestamp=true
@@ -200,12 +200,12 @@ Then, in three separate terminals, start shared consumers that demonstrate diffe
 /opt/kafka/bin/kafka-console-share-consumer.sh --bootstrap-server localhost:9092 --topic orders-queue --group chefs-share-group --reject --property print.offset=true --property print.partition=true --property print.timestamp=true
 ```
 
-This simple setup lets you experiment with shared consumer semantics, observing how acknowledgments (ACCEPT, RELEASE, REJECT) change message flow behavior in real time.
+This simple setup lets you experiment with share consumer semantics, observing how acknowledgments (ACCEPT, RELEASE, REJECT) change message flow behavior in real time.
 
 ### Inspecting Consumer and Share Groups
-Kafka 4.1.1 introduces dedicated tooling to manage and inspect share groups (as part of the new Queues for Kafka feature). You can use the following commands to explore both Kafka and shared consumer groups on your cluster.
+Kafka 4.1.1 introduces dedicated tooling to manage and inspect share groups (as part of the new Queues for Kafka feature). You can use the following commands to explore both consumer groups and share groups on your cluster.
 ```bash
-# List all groups (both Kafka and share groups)
+# List all groups of all types
  /opt/kafka/bin/kafka-groups.sh --bootstrap-server localhost:9092 --list
 
 # List only the share groups
