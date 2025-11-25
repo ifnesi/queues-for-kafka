@@ -4,9 +4,13 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.KafkaShareConsumer;
 import org.apache.kafka.clients.consumer.AcknowledgeType;
+import org.apache.kafka.common.KafkaException;
+import org.apache.kafka.common.TopicIdPartition;
 
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -70,7 +74,7 @@ public class QConsumer {
                 }
 
                 for (ConsumerRecord<String, String> r : records) {
-                    System.out.printf("%n✨ Received: %s (offset=%d | timestamp=%d | Delivery Count: %d)%n",
+                    System.out.printf("%n✨ Received: %s (offset=%d | timestamp=%d | delivery count: %d)%n",
                         r.value(), r.offset(), r.timestamp(), r.deliveryCount().get());
 
                     // Ask user what to do with this message
@@ -99,7 +103,17 @@ public class QConsumer {
                 }
 
                 // Commit the acknowledgements (saves acknowledgement state)
-                consumer.commitSync();
+                // IMPORTANT: Make sure to capture the output of the commitSync call,
+                //            otherwise you cannot see when the acquisition lock timeout occurs.
+                //            This means that someone doing the demo slowly taking more than
+                //            30 seconds (default) to respond to a message will appear to get message duplication. 
+                Map<TopicIdPartition, Optional<KafkaException>> commitResult = consumer.commitSync();
+                commitResult.forEach((topicPartition, exception) -> {
+                    if (exception.isPresent()) {
+                        System.out.println();
+                        System.out.printf("❌ Order failed - %s %n", exception.get().getMessage());
+                    }
+                });
             }
         } catch (Exception e) {
             e.printStackTrace();
