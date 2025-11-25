@@ -1,5 +1,6 @@
 package com.example.qtest;
 
+import org.apache.kafka.clients.consumer.CloseOptions;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -31,7 +32,7 @@ public class KConsumer {
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
         consumer.subscribe(Collections.singletonList(TOPIC));
 
-        System.out.println("✅ Classic consumer started. Listening on topic: " + TOPIC);
+        System.out.println("✅ Consumer group started. Listening on topic: " + TOPIC);
 
         final Thread mainThread = Thread.currentThread();
 
@@ -63,7 +64,7 @@ public class KConsumer {
         } finally {
             System.out.println("🔻 Closing consumer and leaving group...");
             // Close with a timeout to give it a chance to send LeaveGroup & commit
-            consumer.close(Duration.ofSeconds(10));
+            consumer.close(CloseOptions.timeout(Duration.ofSeconds(10)));
             System.out.println("✅ Consumer closed gracefully.");
         }
     }
